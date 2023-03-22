@@ -1,0 +1,11 @@
+---
+# defaults file for ansible-role-immich-podman
+
+version_tag: "v1.51.2"
+base_dir: "."
+upload_dir: "./immich_uploads"
+postgres_password: "CHANGE-THIS-Aqueduct-Party-Other-Onshore-Sandbar-Stoppable"
+typesense_api_key: "CHANGE-THIS-Module-Accurate-Washing-Crazily-Spinner-Native"
+external_url: "http://localhost:2283"
+postgres_username: "postgres"
+postgres_database: "postgres"

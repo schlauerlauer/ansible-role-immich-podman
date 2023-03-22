@@ -1,0 +1,162 @@
+---
+# tasks file for ansible-role-immich-podman
+
+- name: "Create immich dir"
+  file:
+    path: "{{ base_dir }}/immich"
+    state: "directory"
+
+- name: "Create model_cache dir"
+  file:
+    path: "{{ base_dir }}/immich/model_cache"
+    state: "directory"
+
+- name: "Create pg_data dir"
+  file:
+    path: "{{ base_dir}}/immich/pg_data"
+    state: "directory"
+
+- name: "Create typesense dir"
+  file:
+    path: "{{ base_dir}}/immich/typesense"
+    state: "directory"
+
+- name: "Copy immich env"
+  template:
+    force: yes
+    src: "immich.env.j2"
+    dest: "{{ base_dir }}/immich/immich.env"
+
+- name: "Create immich pod"
+  containers.podman.podman_pod:
+    name: "immich-pod"
+    state: "created"
+    infra_name: "immich-infra"
+    recreate: no
+    ports:
+      - "2283:3000" # web
+      - "2284:3001" # server
+
+- name: "Immich redis"
+  containers.podman.podman_container:
+    pod: "immich-pod"
+    name: "immich-redis"
+    image: "docker.io/library/redis:6.2.11-alpine3.17"
+    recreate: no
+    restart_policy: "no"
+    tty: no
+    detach: yes
+    state: "started"
+
+- name: "Immich typesense"
+  containers.podman.podman_container:
+    pod: "immich-pod"
+    name: "immich-typesense"
+    image: "docker.io/typesense/typesense:0.24.0"
+    recreate: no
+    restart_policy: "always"
+    tty: no
+    detach: yes
+    state: "started"
+    env:
+      TYPESENSE_API_KEY: "{{ typesense_api_key }}"
+      TYPESENSE_DATA_DIR: "/data"
+    volumes:
+      - "{{ base_dir }}/immich/typesense:/data:Z"
+
+- name: "Immich postgres"
+  containers.podman.podman_container:
+    pod: "immich-pod"
+    name: "immich-postgres"
+    image: "docker.io/library/postgres:15.2-alpine3.17"
+    recreate: no
+    restart_policy: "no"
+    tty: no
+    detach: yes
+    state: "started"
+    env_file: "{{ base_dir}}/immich/immich.env"
+    env:
+      POSTGRES_PASSWORD: "{{ postgres_password }}"
+      PGDATA: "/var/lib/postgresql/data"
+    volumes:
+      - "{{ base_dir}}/immich/pg_data:/var/lib/postgresql/data:Z"
+
+- name: "Immich server"
+  containers.podman.podman_container:
+    pod: "immich-pod"
+    name: "immich-server"
+    image: "ghcr.io/immich-app/immich-server:{{ version_tag }}"
+    recreate: no
+    restart_policy: "no"
+    rm: no
+    tty: no
+    detach: yes
+    state: "started"
+    command: "/bin/sh ./start-server.sh"
+    volumes:
+      - "{{ upload_dir}}:/usr/src/app/upload:z"
+    env_file: "{{ base_dir }}/immich/immich.env"
+    env:
+      NODE_ENV: "production"
+
+- name: "Immich microservices"
+  containers.podman.podman_container:
+    pod: "immich-pod"
+    name: "immich-microservices"
+    image: "ghcr.io/immich-app/immich-server:{{ version_tag }}"
+    recreate: no
+    restart_policy: "no"
+    tty: no
+    detach: yes
+    state: "started"
+    command: "/bin/sh ./start-microservices.sh"
+    volumes:
+      - "{{ upload_dir}}:/usr/src/app/upload:z"
+    env_file: "{{ base_dir }}/immich/immich.env"
+    env:
+      NODE_ENV: "production"
+
+- name: "Immich web"
+  containers.podman.podman_container:
+    pod: "immich-pod"
+    name: "immich-web"
+    image: "ghcr.io/immich-app/immich-web:{{ version_tag }}"
+    recreate: no
+    restart_policy: "no"
+    tty: no
+    detach: yes
+    state: "started"
+    command: "/bin/sh ./entrypoint.sh"
+    env_file: "{{ base_dir }}/immich/immich.env"
+
+- name: "Immich machine learning"
+  containers.podman.podman_container:
+    pod: "immich-pod"
+    name: "immich-machine-learning"
+    image: "ghcr.io/immich-app/immich-machine-learning:{{ version_tag }}"
+    recreate: no
+    restart_policy: "no"
+    tty: no
+    detach: yes
+    state: "started"
+    env_file: "{{ base_dir }}/immich/immich.env"
+    env:
+      NODE_ENV: "production"
+    volumes:
+      - "{{ upload_dir}}:/usr/src/app/upload:z"
+      - "{{ base_dir }}/immich/model_cache:/cache"
+
+# - name: "Immich proxy"
+#   containers.podman.podman_container:
+#     pod: "immich-pod"
+#     name: "immich-proxy"
+#     image: "ghcr.io/immich-app/immich-proxy:{{ version_tag }}"
+#     recreate: no
+#     restart_policy: "no"
+#     tty: no
+#     detach: yes
+#     state: "started"
+#     command: "/bin/sh ./entrypoint.sh"
+#     env:
+#       IMMICH_SERVER_URL: "http://127.0.0.1"
+#       IMMICH_WEB_URL: "http://127.0.0.1"
