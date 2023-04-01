@@ -1,9 +1,15 @@
 ---
 # defaults file for ansible-role-immich-podman
 
-version_tag: "v1.51.2"
+version_tag: "v1.52.1"
 base_dir: "."
-upload_dir: "./immich_uploads"
+
+data_base_dir: "./immich_uploads"
+data_encoded_videos_dir: "./immich_uploads/encoded-video"
+data_profile_dir: "./immich_uploads/profile"
+data_thumbs_dir: "./immich_uploads/thumbs"
+data_library_dir: "./immich_uploads/library"
+
 postgres_password: "CHANGE-THIS-Aqueduct-Party-Other-Onshore-Sandbar-Stoppable"
 typesense_api_key: "CHANGE-THIS-Module-Accurate-Washing-Crazily-Spinner-Native"
 external_url: "http://localhost:2283"

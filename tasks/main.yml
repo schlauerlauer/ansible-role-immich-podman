@@ -94,7 +94,11 @@
     state: "started"
     command: "/bin/sh ./start-server.sh"
     volumes:
-      - "{{ upload_dir}}:/usr/src/app/upload:z"
+      - "{{ data_base_dir}}:/usr/src/app/upload:z"
+      - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
+      - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
+      - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
+      - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
     env_file: "{{ base_dir }}/immich/immich.env"
     env:
       NODE_ENV: "production"
@@ -111,7 +115,11 @@
     state: "started"
     command: "/bin/sh ./start-microservices.sh"
     volumes:
-      - "{{ upload_dir}}:/usr/src/app/upload:z"
+      - "{{ data_base_dir}}:/usr/src/app/upload:z"
+      - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
+      - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
+      - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
+      - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
     env_file: "{{ base_dir }}/immich/immich.env"
     env:
       NODE_ENV: "production"
@@ -143,8 +151,12 @@
     env:
       NODE_ENV: "production"
     volumes:
-      - "{{ upload_dir}}:/usr/src/app/upload:z"
-      - "{{ base_dir }}/immich/model_cache:/cache"
+      - "{{ data_base_dir}}:/usr/src/app/upload:z"
+      - "{{ base_dir }}/immich/model_cache:/cache:Z"
+      - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
+      - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
+      - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
+      - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
 
 # - name: "Immich proxy"
 #   containers.podman.podman_container:
