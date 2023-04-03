@@ -54,7 +54,7 @@
     name: "immich-typesense"
     image: "docker.io/typesense/typesense:0.24.0"
     recreate: no
-    restart_policy: "always"
+    restart_policy: "no"
     tty: no
     detach: yes
     state: "started"
