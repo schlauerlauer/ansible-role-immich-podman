@@ -1,7 +1,7 @@
 ---
 # defaults file for ansible-role-immich-podman
 
-version_tag: "v1.54.1"
+version_tag: "v1.55.0"
 base_dir: "."
 
 data_base_dir: "./immich_uploads"
@@ -16,4 +16,4 @@ external_url: "http://localhost:2283"
 postgres_username: "postgres"
 postgres_database: "postgres"
 
-reverse_geocoding_precision: 3
+reverse_geocoding_precision: 2
