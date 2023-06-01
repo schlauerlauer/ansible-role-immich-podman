@@ -92,7 +92,7 @@
     tty: no
     detach: yes
     state: "started"
-    command: "/bin/sh ./start-server.sh"
+    command: "start-server.sh"
     volumes:
       - "{{ data_base_dir}}:/usr/src/app/upload:z"
       - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
@@ -113,7 +113,7 @@
     tty: no
     detach: yes
     state: "started"
-    command: "/bin/sh ./start-microservices.sh"
+    command: "start-microservices.sh"
     volumes:
       - "{{ data_base_dir}}:/usr/src/app/upload:z"
       - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
@@ -134,7 +134,6 @@
     tty: no
     detach: yes
     state: "started"
-    command: "/bin/sh ./entrypoint.sh"
     env_file: "{{ base_dir }}/immich/immich.env"
 
 - name: "Immich machine learning"
