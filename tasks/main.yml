@@ -41,7 +41,7 @@
   containers.podman.podman_container:
     pod: "immich-pod"
     name: "immich-redis"
-    image: "docker.io/library/redis:6.2.11-alpine3.17"
+    image: "docker.io/library/redis:6.2.12-alpine3.18"
     recreate: no
     restart_policy: "no"
     tty: no
@@ -52,7 +52,7 @@
   containers.podman.podman_container:
     pod: "immich-pod"
     name: "immich-typesense"
-    image: "docker.io/typesense/typesense:0.24.0"
+    image: "docker.io/typesense/typesense:0.24.1"
     recreate: no
     restart_policy: "no"
     tty: no
@@ -150,12 +150,7 @@
     env:
       NODE_ENV: "production"
     volumes:
-      - "{{ data_base_dir}}:/usr/src/app/upload:z"
       - "{{ base_dir }}/immich/model_cache:/cache:Z"
-      - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
-      - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
-      - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
-      - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
 
 # - name: "Immich proxy"
 #   containers.podman.podman_container:
