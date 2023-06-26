@@ -1,25 +1,15 @@
 ---
 # tasks file for ansible-role-immich-podman
 
-- name: "Create immich dir"
+- name: "Create directories"
   file:
-    path: "{{ base_dir }}/immich"
+    path: "{{ item }}"
     state: "directory"
-
-- name: "Create model_cache dir"
-  file:
-    path: "{{ base_dir }}/immich/model_cache"
-    state: "directory"
-
-- name: "Create pg_data dir"
-  file:
-    path: "{{ base_dir}}/immich/pg_data"
-    state: "directory"
-
-- name: "Create typesense dir"
-  file:
-    path: "{{ base_dir}}/immich/typesense"
-    state: "directory"
+  loop:
+    - "{{ base_dir }}/immich"
+    - "{{ base_dir }}/immich/model_cache"
+    - "{{ base_dir }}/immich/pg_data"
+    - "{{ base_dir }}/immich/typesense"
 
 - name: "Copy immich env"
   template:
@@ -79,7 +69,7 @@
       POSTGRES_PASSWORD: "{{ postgres_password }}"
       PGDATA: "/var/lib/postgresql/data"
     volumes:
-      - "{{ base_dir}}/immich/pg_data:/var/lib/postgresql/data:Z"
+      - "{{ base_dir}}/immich/pg_data:/var/lib/postgresql/data:rw,Z"
 
 - name: "Immich server"
   containers.podman.podman_container:
