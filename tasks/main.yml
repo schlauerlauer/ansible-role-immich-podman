@@ -82,7 +82,9 @@
     tty: no
     detach: yes
     state: "started"
-    command: "start-server.sh"
+    command:
+      - "start.sh"
+      - "immich"
     volumes:
       - "{{ data_base_dir}}:/usr/src/app/upload:z"
       - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
@@ -103,7 +105,9 @@
     tty: no
     detach: yes
     state: "started"
-    command: "start-microservices.sh"
+    command:
+      - "start.sh"
+      - "microservices"
     volumes:
       - "{{ data_base_dir}}:/usr/src/app/upload:z"
       - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
