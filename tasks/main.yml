@@ -23,7 +23,7 @@
 
 - name: "Debug"
   ansible.builtin.fail:
-    msg: "DEBUG {{ data_base_dir }}/encoded-video"
+    msg: "DEBUG {{ data_encoded_videos_dir }}"
 
 - name: "Create directories"
   file:
