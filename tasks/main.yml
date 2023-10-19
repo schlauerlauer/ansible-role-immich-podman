@@ -2,8 +2,28 @@
 # tasks file for ansible-role-immich-podman
 
 - name: "Include secrets"
+  ansible.builtin.include_vars:
+    file: "{{ playbook_dir }}/inventory/{{ secrets_file }}"
+    name: "bws"
+  when: use_bws
+
+- name: "Set fact"
+  ansible.builtin.set_fact:
+    secrets: '{{ lookup("community.general.bitwarden_secrets_manager", bws.bws_immich_id, bws_access_token=bws.bws_token).value | from_json }}'
+  when: use_bws
+
+- name: "Overwrite vars"
+  ansible.builtin.set_fact:
+    base_dir: "{{ secrets.base_dir }}"
+    data_base_dir: "{{ secrets.data_base_dir }}"
+    postgres_password: "{{ secrets.postgres_password }}"
+    typesense_api_key: "{{ secrets.typesense_api_key }}"
+    external_url: "{{ secrets.external_url }}"
+  when: use_bws
+
+- name: "Debug"
   ansible.builtin.fail:
-    msg: "{{ secrets_file }}"
+    msg: "DEBUG {{ data_base_dir }}/encoded-video"
 
 - name: "Create directories"
   file:
