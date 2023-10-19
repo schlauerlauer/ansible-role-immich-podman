@@ -1,6 +1,10 @@
 ---
 # tasks file for ansible-role-immich-podman
 
+- name: "Include secrets"
+  ansible.builtin.fail:
+    msg: "{{ secrets_file }}"
+
 - name: "Create directories"
   file:
     path: "{{ item }}"
