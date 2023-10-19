@@ -14,16 +14,9 @@
 
 - name: "Overwrite vars"
   ansible.builtin.set_fact:
-    base_dir: "{{ secrets.base_dir }}"
-    data_base_dir: "{{ secrets.data_base_dir }}"
     postgres_password: "{{ secrets.postgres_password }}"
     typesense_api_key: "{{ secrets.typesense_api_key }}"
-    external_url: "{{ secrets.external_url }}"
   when: use_bws
-
-- name: "Debug"
-  ansible.builtin.fail:
-    msg: "DEBUG {{ data_encoded_videos_dir }}"
 
 - name: "Create directories"
   file:
