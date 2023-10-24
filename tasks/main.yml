@@ -127,15 +127,17 @@
     command:
       - "start.sh"
       - "microservices"
-    volumes:
-      - "{{ data_base_dir}}:/usr/src/app/upload:z"
-      - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
-      - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
-      - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
-      - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
+    volumes: "{{ library_volumes + volumes }}"
     env_file: "{{ base_dir }}/immich/immich.env"
     env:
       NODE_ENV: "production"
+    vars:
+      volumes:
+        - "{{ data_base_dir}}:/usr/src/app/upload:z"
+        - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
+        - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
+        - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
+        - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
 
 - name: "Immich web"
   containers.podman.podman_container:
@@ -164,18 +166,3 @@
       NODE_ENV: "production"
     volumes:
       - "{{ base_dir }}/immich/model_cache:/cache:Z"
-
-# - name: "Immich proxy"
-#   containers.podman.podman_container:
-#     pod: "immich-pod"
-#     name: "immich-proxy"
-#     image: "ghcr.io/immich-app/immich-proxy:{{ version_tag }}"
-#     recreate: no
-#     restart_policy: "no"
-#     tty: no
-#     detach: yes
-#     state: "started"
-#     command: "/bin/sh ./entrypoint.sh"
-#     env:
-#       IMMICH_SERVER_URL: "http://127.0.0.1"
-#       IMMICH_WEB_URL: "http://127.0.0.1"
