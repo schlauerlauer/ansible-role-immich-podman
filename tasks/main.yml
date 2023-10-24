@@ -3,6 +3,7 @@
 
 - name: "debug"
   ansible.builtin.debug:
+    msg: "{{ a + b }}"
   vars:
     a:
       - a
@@ -12,7 +13,6 @@
       - d
       - e
       - f
-  msg: "{{ a + b }}"
 
 - name: "Test"
   ansible.builtin.fail:
