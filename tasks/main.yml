@@ -3,16 +3,14 @@
 
 - name: "debug"
   ansible.builtin.debug:
-    msg: "{{ a + b }}"
+    msg: "{{ library_volumes + volumes }}"
   vars:
-    a:
-      - a
-      - b
-      - c
-    b:
-      - d
-      - e
-      - f
+    volumes:
+      - "{{ data_base_dir}}:/usr/src/app/upload:z"
+      - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
+      - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
+      - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
+      - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
 
 - name: "Test"
   ansible.builtin.fail:
