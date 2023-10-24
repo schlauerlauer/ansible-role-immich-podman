@@ -1,6 +1,23 @@
 ---
 # tasks file for ansible-role-immich-podman
 
+- name: "debug"
+  ansible.builtin.debug:
+  vars:
+    a:
+      - a
+      - b
+      - c
+    b:
+      - d
+      - e
+      - f
+  msg: "{{ a + b }}"
+
+- name: "Test"
+  ansible.builtin.fail:
+    msg: "test"
+
 - name: "Include secrets"
   ansible.builtin.include_vars:
     file: "{{ playbook_dir }}/inventory/{{ secrets_file }}"
