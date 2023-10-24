@@ -1,21 +1,6 @@
 ---
 # tasks file for ansible-role-immich-podman
 
-- name: "debug"
-  ansible.builtin.debug:
-    msg: "{{ library_volumes + volumes }}"
-  vars:
-    volumes:
-      - "{{ data_base_dir}}:/usr/src/app/upload:z"
-      - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
-      - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
-      - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
-      - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
-
-- name: "Test"
-  ansible.builtin.fail:
-    msg: "test"
-
 - name: "Include secrets"
   ansible.builtin.include_vars:
     file: "{{ playbook_dir }}/inventory/{{ secrets_file }}"
@@ -117,15 +102,17 @@
     command:
       - "start.sh"
       - "immich"
-    volumes:
-      - "{{ data_base_dir}}:/usr/src/app/upload:z"
-      - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
-      - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
-      - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
-      - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
+    volumes: "{{ library_volumes + volumes }}"
     env_file: "{{ base_dir }}/immich/immich.env"
     env:
       NODE_ENV: "production"
+    vars:
+      volumes:
+        - "{{ data_base_dir}}:/usr/src/app/upload:z"
+        - "{{ data_encoded_videos_dir }}:/usr/src/app/upload/encoded-video:z"
+        - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
+        - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
+        - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
 
 - name: "Immich microservices"
   containers.podman.podman_container:
