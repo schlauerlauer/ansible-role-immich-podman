@@ -41,7 +41,6 @@
     infra_name: "immich-infra"
     recreate: no
     ports:
-      - "2283:3000" # web
       - "2284:3001" # server
 
 - name: "Immich redis"
@@ -138,18 +137,6 @@
       - "{{ data_profile_dir }}:/usr/src/app/upload/profile:z"
       - "{{ data_thumbs_dir }}:/usr/src/app/upload/thumbs:z"
       - "{{ data_library_dir }}:/usr/src/app/upload/library:z"
-
-- name: "Immich web"
-  containers.podman.podman_container:
-    pod: "immich-pod"
-    name: "immich-web"
-    image: "ghcr.io/immich-app/immich-web:{{ version_tag }}"
-    recreate: no
-    restart_policy: "no"
-    tty: no
-    detach: yes
-    state: "started"
-    env_file: "{{ base_dir }}/immich/immich.env"
 
 - name: "Immich machine learning"
   containers.podman.podman_container:
