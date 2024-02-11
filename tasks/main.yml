@@ -15,7 +15,6 @@
 - name: "Overwrite vars"
   ansible.builtin.set_fact:
     postgres_password: "{{ secrets.postgres_password }}"
-    typesense_api_key: "{{ secrets.typesense_api_key }}"
   when: use_bws
 
 - name: "Create directories"
@@ -26,7 +25,6 @@
     - "{{ base_dir }}/immich"
     - "{{ base_dir }}/immich/model_cache"
     - "{{ base_dir }}/immich/pg_data"
-    - "{{ base_dir }}/immich/typesense"
 
 - name: "Copy immich env"
   template:
@@ -54,27 +52,11 @@
     detach: yes
     state: "started"
 
-- name: "Immich typesense"
-  containers.podman.podman_container:
-    pod: "immich-pod"
-    name: "immich-typesense"
-    image: "docker.io/typesense/typesense:0.24.1"
-    recreate: no
-    restart_policy: "no"
-    tty: no
-    detach: yes
-    state: "started"
-    env:
-      TYPESENSE_API_KEY: "{{ typesense_api_key }}"
-      TYPESENSE_DATA_DIR: "/data"
-    volumes:
-      - "{{ base_dir }}/immich/typesense:/data:Z"
-
 - name: "Immich postgres"
   containers.podman.podman_container:
     pod: "immich-pod"
     name: "immich-postgres"
-    image: "docker.io/library/postgres:15.2-alpine3.17"
+    image: "docker.io/tensorchord/pgvecto-rs:pg15-v0.2.0-rootless"
     recreate: no
     restart_policy: "no"
     tty: no
