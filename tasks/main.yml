@@ -56,7 +56,7 @@
   containers.podman.podman_container:
     pod: "immich-pod"
     name: "immich-postgres"
-    image: "docker.io/tensorchord/pgvecto-rs:pg15-v0.2.0"
+    image: "docker.io/tensorchord/pgvecto-rs:pg15-v0.1.11"
     recreate: no
     restart_policy: "no"
     tty: no
