@@ -14,3 +14,6 @@ postgres_password: "CHANGE-THIS-Aqueduct-Party-Other-Onshore-Sandbar-Stoppable"
 external_url: "http://localhost:2283"
 postgres_username: "postgres"
 postgres_database: "postgres"
+
+pod_name: "immich-pod"
+container_prefix: "immich"

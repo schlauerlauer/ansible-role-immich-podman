@@ -34,17 +34,17 @@
 
 - name: "Create immich pod"
   containers.podman.podman_pod:
-    name: "immich-pod"
+    name: "{{ pod_name }}"
     state: "created"
-    infra_name: "immich-infra"
+    infra_name: "{{ container_prefix }}-infra"
     recreate: no
     ports:
       - "2284:3001" # server
 
 - name: "Immich redis"
   containers.podman.podman_container:
-    pod: "immich-pod"
-    name: "immich-redis"
+    pod: "{{ pod_name }}"
+    name: "{{ container_prefix }}-redis"
     image: "docker.io/library/redis:6.2.12-alpine3.18"
     recreate: no
     restart_policy: "no"
@@ -54,8 +54,8 @@
 
 - name: "Immich postgres"
   containers.podman.podman_container:
-    pod: "immich-pod"
-    name: "immich-postgres"
+    pod: "{{ pod_name }}"
+    name: "{{ container_prefix }}-postgres"
     image: "docker.io/tensorchord/pgvecto-rs:pg15-v0.2.0"
     recreate: no
     restart_policy: "no"
@@ -71,8 +71,8 @@
 
 - name: "Immich server"
   containers.podman.podman_container:
-    pod: "immich-pod"
-    name: "immich-server"
+    pod: "{{ pod_name }}"
+    name: "{{ container_prefix }}-server"
     image: "ghcr.io/immich-app/immich-server:{{ version_tag }}"
     recreate: no
     restart_policy: "no"
@@ -97,8 +97,8 @@
 
 - name: "Immich microservices"
   containers.podman.podman_container:
-    pod: "immich-pod"
-    name: "immich-microservices"
+    pod: "{{ pod_name }}"
+    name: "{{ container_prefix }}-microservices"
     image: "ghcr.io/immich-app/immich-server:{{ version_tag }}"
     recreate: no
     restart_policy: "no"
@@ -122,8 +122,8 @@
 
 - name: "Immich machine learning"
   containers.podman.podman_container:
-    pod: "immich-pod"
-    name: "immich-machine-learning"
+    pod: "{{ pod_name }}"
+    name: "{{ container_prefix }}-machine-learning"
     image: "ghcr.io/immich-app/immich-machine-learning:{{ version_tag }}"
     recreate: no
     restart_policy: "no"
