@@ -39,7 +39,7 @@
     infra_name: "{{ container_prefix }}-infra"
     recreate: no
     ports:
-      - "2284:3001" # server
+      - "2284:2283" # server
 
 - name: "Immich redis"
   containers.podman.podman_container:
