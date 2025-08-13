@@ -1,22 +1,6 @@
 ---
 # tasks file for ansible-role-immich-podman
 
-- name: "Include secrets"
-  ansible.builtin.include_vars:
-    file: "{{ playbook_dir }}/inventory/{{ secrets_file }}"
-    name: "bws"
-  when: use_bws
-
-- name: "Set fact"
-  ansible.builtin.set_fact:
-    secrets: '{{ lookup("community.general.bitwarden_secrets_manager", bws.bws_immich_id, bws_access_token=bws.bws_token).value | from_json }}'
-  when: use_bws
-
-- name: "Overwrite vars"
-  ansible.builtin.set_fact:
-    postgres_password: "{{ secrets.postgres_password }}"
-  when: use_bws
-
 - name: "Create directories"
   file:
     path: "{{ item }}"
@@ -56,7 +40,7 @@
   containers.podman.podman_container:
     pod: "{{ pod_name }}"
     name: "{{ container_prefix }}-postgres"
-    image: "docker.io/tensorchord/pgvecto-rs:pg15-v0.2.0"
+    image: "ghcr.io/immich-app/postgres:15-vectorchord0.3.0-pgvectors0.2.0"
     recreate: no
     restart_policy: "no"
     tty: no
