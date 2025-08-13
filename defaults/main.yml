@@ -1,7 +1,7 @@
 ---
 # defaults file for ansible-role-immich-podman
 
-version_tag: "v1.136.0"
+version_tag: "v1.137.3"
 base_dir: "."
 
 data_base_dir: "./immich_uploads"
